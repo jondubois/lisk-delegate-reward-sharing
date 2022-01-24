@@ -1,0 +1,15 @@
+{
+  "liskServiceURL": "https://mainnet-service.lisktools.eu/api/v2/",
+  "liskCoreRPCURL": "",
+  "delegateAddress": "",
+  "sharingRatio": 0.5,
+  "minRewardDistributionAmount": 10000000,
+  "recentDuration": 86400000,
+  "payoutMessage": "Delegate payout",
+  "pauseBetweenTransactions": 2000,
+  "transactionFee": 300000,
+  "pageSize": 10,
+  "delegatePassphrases": [
+    ""
+  ]
+}
