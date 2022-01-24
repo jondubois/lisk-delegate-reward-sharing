@@ -1,0 +1,25 @@
+{
+  "name": "lisk-delegate-reward-sharing",
+  "version": "1.0.0",
+  "description": "Scripts to share rewards with voters on the Lisk v3 blockchain.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jondubois/lisk-delegate-reward-sharing.git"
+  },
+  "keywords": [
+    "lisk",
+    "delegate",
+    "reward",
+    "sharing"
+  ],
+  "author": "Jonathan Gros-Dubois",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jondubois/lisk-delegate-reward-sharing/issues"
+  },
+  "homepage": "https://github.com/jondubois/lisk-delegate-reward-sharing#readme"
+}
