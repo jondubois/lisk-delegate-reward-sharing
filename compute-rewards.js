@@ -49,15 +49,15 @@ async function getLatestTransaction(fromAccountAddress, toAccountAddress) {
 }
 
 async function getVoters(delegateAddress) {
+  let voters = {};
   let voteList = [];
   let currentVotePage = [];
   for (let i = 0; i < 1 || currentVotePage.length; i++) {
     let { data: result } = await axiosClient.get('votes_received', {
       params: {
         address: delegateAddress,
-        aggregate: true,
-        offset: i * config.pageSize,
-        limit: config.pageSize
+        offset: i * PAGE_SIZE,
+        limit: PAGE_SIZE
       }
     });
     if (!result.data) {
@@ -67,11 +67,22 @@ async function getVoters(delegateAddress) {
     }
     currentVotePage = result.data.votes || [];
     for (let vote of currentVotePage) {
-      voteList.push({
-        ...vote,
-        amount: parseInt(vote.amount)
-      });
+      if (!voters[vote.address]) {
+        voters[vote.address] = {
+          address: vote.address,
+          amount: 0
+        };
+      }
+      let voter = voters[vote.address];
+      voter.amount += parseInt(vote.amount);
     }
+  }
+  let voterList = Object.values(voters);
+  for (let voter of voterList) {
+    voteList.push({
+      address: voter.address,
+      amount: voter.amount
+    });
   }
   return voteList;
 }
