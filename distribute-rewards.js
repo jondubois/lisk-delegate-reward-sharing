@@ -1,6 +1,8 @@
 const { apiClient, cryptography } = require('@liskhq/lisk-client');
 const {
   PENDING_REWARDS_FILE_PATH,
+  TRANSACTION_LOG_FILE_PATH,
+  UNIT_DIVISOR,
   readJSONFile,
   writeJSONFile,
   wait
@@ -9,9 +11,26 @@ const {
 const path = require('path');
 const config = require(path.join(__dirname, 'config.json'));
 
-const UNIT_DIVISOR = 100000000;
+function sanitizeTransaction(transaction) {
+  let sanitizedTransaction = {
+    moduleID: transaction.moduleID,
+    assetID: transaction.assetID,
+    fee: transaction.fee.toString(),
+    asset: {
+      amount: transaction.asset.amount.toString(),
+      recipientAddress: transaction.asset.recipientAddress.toString('base64'),
+      data: transaction.asset.data
+    },
+    nonce: transaction.nonce.toString(),
+    senderPublicKey: transaction.senderPublicKey.toString('base64'),
+    signatures: transaction.signatures.map(signature => signature.toString('base64')),
+    id: transaction.id.toString('base64')
+  };
+  return sanitizedTransaction;
+}
 
 (async () => {
+  let transationList = [];
   let pendingRewardsData = await readJSONFile(PENDING_REWARDS_FILE_PATH);
 
   console.log('Voter count:', pendingRewardsData.voterRewards.length);
@@ -36,6 +55,12 @@ const UNIT_DIVISOR = 100000000;
       }, config.delegatePassphrases[0]);
 
       let signedTxn = await client.transaction.sign(txn, config.delegatePassphrases);
+
+      let serializedTransaction = sanitizeTransaction(signedTxn);
+      transationList.push(serializedTransaction);
+
+      await writeJSONFile(TRANSACTION_LOG_FILE_PATH, transationList);
+
       let response = await client.transaction.send(signedTxn);
       if (!response || !response.transactionId) {
         throw new Error('Invalid transaction response format');
@@ -71,7 +96,9 @@ const UNIT_DIVISOR = 100000000;
     }
   } catch (error) {
     console.error(`Failed to send rewards - ${error.message}`);
+    process.exit(1);
   }
 
+  console.log('Done.');
   process.exit();
 })();

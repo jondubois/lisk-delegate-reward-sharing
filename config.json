@@ -6,10 +6,8 @@
   "minRewardDistributionAmount": 10000000,
   "recentDuration": 86400000,
   "payoutMessage": "Delegate payout",
-  "pauseBetweenTransactions": 4000,
+  "pauseBetweenTransactions": 1000,
   "transactionFee": 300000,
   "pageSize": 10,
-  "delegatePassphrases": [
-    ""
-  ]
+  "delegatePassphrases": []
 }

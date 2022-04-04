@@ -56,8 +56,8 @@ async function getVoters(delegateAddress) {
     let { data: result } = await axiosClient.get('votes_received', {
       params: {
         address: delegateAddress,
-        offset: i * PAGE_SIZE,
-        limit: PAGE_SIZE
+        offset: i * config.pageSize,
+        limit: config.pageSize
       }
     });
     if (!result.data) {
@@ -146,4 +146,7 @@ async function getVoters(delegateAddress) {
   await removeFile(PREVIOUS_PENDING_REWARDS_FILE_PATH, {force: true});
   await renameFile(PENDING_REWARDS_FILE_PATH, PREVIOUS_PENDING_REWARDS_FILE_PATH);
   await writeJSONFile(PENDING_REWARDS_FILE_PATH, pendingRewardsData);
+
+  console.log('Done.');
+  process.exit();
 })();

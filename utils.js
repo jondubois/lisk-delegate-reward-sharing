@@ -9,8 +9,11 @@ const removeFile = util.promisify(fs.rm);
 
 const PENDING_REWARDS_FILE_PATH = path.resolve(__dirname, 'pending-rewards.json');
 const PREVIOUS_PENDING_REWARDS_FILE_PATH = path.resolve(__dirname, 'previous-pending-rewards.json');
+const TRANSACTION_LOG_FILE_PATH = path.resolve(__dirname, 'transaction-log.json');
 // const LISK_SERVICE_URL = 'http://localhost:9901/api/v2/'
 // const LISK_SERVICE_URL = 'https://service.lisk.com/api/v2/'
+
+const UNIT_DIVISOR = 100000000;
 
 async function readJSONFile(filePath) {
   return JSON.parse(await readFile(filePath));
@@ -29,6 +32,8 @@ async function wait(duration) {
 module.exports = {
   PENDING_REWARDS_FILE_PATH,
   PREVIOUS_PENDING_REWARDS_FILE_PATH,
+  TRANSACTION_LOG_FILE_PATH,
+  UNIT_DIVISOR,
   readFile,
   writeFile,
   renameFile,
