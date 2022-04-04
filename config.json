@@ -9,5 +9,7 @@
   "pauseBetweenTransactions": 1000,
   "transactionFee": 300000,
   "pageSize": 10,
-  "delegatePassphrases": []
+  "delegatePassphrases": [
+    ""
+  ]
 }
