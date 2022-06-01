@@ -38,9 +38,9 @@ function sanitizeTransaction(transaction) {
   let client = await apiClient.createWSClient(config.liskCoreRPCURL);
   let delegateHexAddress = cryptography.getAddressFromBase32Address(config.delegateAddress, 'lsk');
   let account = await client.account.get(delegateHexAddress);
-  let nonce = account.sequence.nonce;
+  let accountNonce = account.sequence.nonce;
 
-  async function sendReward(voterReward) {
+  async function sendReward(voterReward, nonce) {
     try {
       let txn = await client.transaction.create({
         moduleID: 2,
@@ -65,8 +65,6 @@ function sanitizeTransaction(transaction) {
       if (!response || !response.transactionId) {
         throw new Error('Invalid transaction response format');
       }
-
-      nonce++;
     } catch (error) {
       throw new Error(
         `Failed to send reward to voter ${voterReward.address} because of error - ${error.message}`
@@ -79,7 +77,8 @@ function sanitizeTransaction(transaction) {
   try {
     for (let voterReward of pendingRewardsData.voterRewards) {
       if (voterReward.pendingReward >= config.minRewardDistributionAmount) {
-        await sendReward(voterReward);
+        await sendReward(voterReward, accountNonce);
+        accountNonce++;
         console.log(
           `Sent ${
             Math.round(voterReward.pendingReward * 100 / UNIT_DIVISOR) / 100
