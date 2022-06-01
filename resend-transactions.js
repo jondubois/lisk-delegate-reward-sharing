@@ -33,8 +33,8 @@ function formatTransaction(sanitizedTransaction) {
 
   let client = await apiClient.createWSClient(config.liskCoreRPCURL);
 
-  try {
-    for (let txn of transactions) {
+  for (let txn of transactions) {
+    try {
       let signedTxn = formatTransaction(txn);
       let response = await client.transaction.send(signedTxn);
       if (!response || !response.transactionId) {
@@ -47,12 +47,11 @@ function formatTransaction(sanitizedTransaction) {
           Math.round(txn.asset.amount * 100 / UNIT_DIVISOR) / 100
         }`
       );
-
-      await wait(config.pauseBetweenTransactions);
+    } catch (error) {
+      console.error(`Failed to send transaction ${txn.id} - ${error.message}`);
     }
-  } catch (error) {
-    console.error(`Failed to send transactions - ${error.message}`);
-    process.exit(1);
+
+    await wait(config.pauseBetweenTransactions);
   }
 
   console.log('Done.');
